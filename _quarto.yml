@@ -9,11 +9,12 @@ website:
       - href: index.qmd
         text: Home
       - about.qmd
+      - href: income-inequality.qmd
+        text: TidyTuesday
 
 format:
   html:
     theme: cosmo
     css: styles.css
     toc: true
-
 
