@@ -16,14 +16,14 @@ The data come from the [TidyTuesday Income Inequality dataset](https://github.co
 
 library(tidyverse)
 
-income_inequality <- readr::read_csv(
+income_inequality <- read_csv(
   "https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-08-05/income_inequality_processed.csv"
 )
 ```
 
 ## Preparing the data
 
-For each country, I use its most recent observation and calculate the difference between its pre-tax and post-tax Gini coefficients.
+For each country, this analysis uses its most recent observation and calculates the difference between its pre-tax and post-tax Gini coefficients. It then focuses on countries where the difference is at least 0.18.
 
 ```{r}
 latest_inequality <- income_inequality |>
@@ -33,29 +33,29 @@ latest_inequality <- income_inequality |>
     !is.na(gini_dhi_eq)
   ) |>
   group_by(Entity) |>
-  slice_max(Year, n = 1, with_ties = FALSE) |>
-  ungroup() |>
+  filter(Year == max(Year)) |>
   mutate(
     inequality_reduction = gini_mi_eq - gini_dhi_eq
-  )
+  ) |>
+  arrange(desc(inequality_reduction))
 
-top_reducers <- latest_inequality |>
-  slice_max(inequality_reduction, n = 15)
+large_reductions <- latest_inequality |>
+  filter(inequality_reduction >= 0.18)
 ```
 
 ## Which countries reduce inequality the most?
 
 ```{r}
 ggplot(
-  top_reducers,
+  large_reductions,
   aes(
     x = inequality_reduction,
-    y = reorder(Entity, inequality_reduction)
+    y = Entity
   )
 ) +
-  geom_col(fill = "#2C7FB8") +
+  geom_point(size = 3, color = "#2C7FB8") +
   labs(
-    title = "Countries with the largest reductions in income inequality",
+    title = "Countries with large reductions in income inequality",
     subtitle = "Difference between pre-tax and post-tax Gini coefficients",
     x = "Reduction in Gini coefficient",
     y = NULL,
@@ -64,4 +64,4 @@ ggplot(
   theme_minimal()
 ```
 
-The graph compares each country's most recent available observation. A larger difference indicates that taxes and government benefits are associated with a greater reduction in measured income inequality.
+The graph shows countries whose pre-tax Gini coefficient is at least 0.18 higher than their post-tax Gini coefficient, using each country's most recent available observation. A larger difference indicates that taxes and government benefits are associated with a greater reduction in measured income inequality.
