@@ -3,18 +3,20 @@ project:
   output-dir: docs
 
 website:
-  title: "aarya28-tech.github.io"
+  title: "Aditya Arya"
   navbar:
     left:
       - href: index.qmd
         text: Home
-      - about.qmd
-      - href: income-inequality.qmd
-        text: TidyTuesday
+      - href: about.qmd
+        text: About
+      - text: Data Viz
+        menu:
+          - href: income-inequality.qmd
+            text: Income inequality
 
 format:
   html:
     theme: cosmo
     css: styles.css
     toc: true
-

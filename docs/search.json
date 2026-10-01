@@ -2,9 +2,9 @@
   {
     "objectID": "about.html",
     "href": "about.html",
-    "title": "About",
+    "title": "About Aditya",
     "section": "",
-    "text": "About this site\n\n1 + 1\n\n[1] 2"
+    "text": "I’m Aditya Arya, a junior at Claremont McKenna College. This website presents my work for Foundations of Data Science in R.\nThe Data Viz section contains my TidyTuesday analysis, including the data source, R code, graph, and interpretation.\nYou can find the website’s files in the GitHub repository."
   },
   {
     "objectID": "income-inequality.html",
@@ -37,8 +37,22 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "aarya28-tech.github.io",
+    "title": "Aditya Arya | Data Science",
     "section": "",
-    "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites.\n\n1 + 1\n\n[1] 2"
+    "text": "Foundations of Data Science in R · Mini-Project 1\n\n\n\nThis website brings together my TidyTuesday analyses. Each page starts with a question, shows the R code used to explore the data, and explains what the graph shows.\nExplore the analysis View the GitHub repository"
+  },
+  {
+    "objectID": "index.html#data-viz",
+    "href": "index.html#data-viz",
+    "title": "Aditya Arya | Data Science",
+    "section": "Data Viz",
+    "text": "Data Viz\n\nIncome inequality before and after taxes\nHow do pre-tax and post-tax income inequality compare across countries in 2020? This analysis uses data shared through TidyTuesday and a scatterplot made in R.\nRead the analysis →"
+  },
+  {
+    "objectID": "index.html#about-this-project",
+    "href": "index.html#about-this-project",
+    "title": "Aditya Arya | Data Science",
+    "section": "About this project",
+    "text": "About this project\nThis site is made with Quarto and R for Foundations of Data Science. The source files, including the .qmd pages and rendered website, are in the GitHub repository."
   }
 ]

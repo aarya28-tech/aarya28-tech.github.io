@@ -1,1 +1,57 @@
-/* css styles */
+.home-hero {
+  max-width: 980px;
+  margin: 2.5rem auto 3rem;
+  padding: 3rem 3.25rem;
+  background: #f4f8fc;
+  border-left: 6px solid #246b9c;
+  border-radius: 12px;
+}
+
+.home-hero h1 {
+  margin-top: 0.35rem;
+  font-size: clamp(2.1rem, 5vw, 3.5rem);
+}
+
+.home-hero p:not(.eyebrow) {
+  max-width: 700px;
+  font-size: 1.12rem;
+  line-height: 1.6;
+}
+
+.eyebrow {
+  color: #205b84;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.home-hero .btn {
+  margin: 0.5rem 0.6rem 0 0;
+}
+
+.home-content {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 0 1rem 3rem;
+}
+
+.project-card {
+  max-width: 700px;
+  margin: 1.2rem 0 2.5rem;
+  padding: 1.5rem 1.75rem;
+  border: 1px solid #d7e0e7;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(27, 47, 63, 0.06);
+}
+
+.project-card h3 {
+  margin-top: 0;
+}
+
+@media (max-width: 600px) {
+  .home-hero {
+    margin: 1rem;
+    padding: 1.75rem;
+  }
+}
