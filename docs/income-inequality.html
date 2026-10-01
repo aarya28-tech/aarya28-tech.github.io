@@ -212,13 +212,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="choose-the-observations" class="level2">
 <h2 class="anchored" data-anchor-id="choose-the-observations">Choose the observations</h2>
-<p>I use 2020 because the dataset has both Gini measures for 19 countries in that year. There are 31 rows for 2020; 12 have no pre-tax Gini value, while none are missing the post-tax value. I remove rows missing either measure. This means the graph compares only countries with both values available, not every country in the world.</p>
+<p>I use 2020 because the dataset has both Gini measures for 19 countries in that year. There are 31 rows for 2020; 12 have no pre-tax Gini value, while none are missing the post-tax value. Gini values run from 0 to 1, so filtering for values at least 0 keeps the recorded values and drops the missing rows. This means the graph compares only countries with both values available, not every country in the world.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>inequality_2020 <span class="ot">&lt;-</span> income_inequality <span class="sc">|&gt;</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    Year <span class="sc">==</span> <span class="dv">2020</span>,</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="sc">!</span><span class="fu">is.na</span>(gini_mi_eq),</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="sc">!</span><span class="fu">is.na</span>(gini_dhi_eq)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    gini_mi_eq <span class="sc">&gt;=</span> <span class="dv">0</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    gini_dhi_eq <span class="sc">&gt;=</span> <span class="dv">0</span></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>

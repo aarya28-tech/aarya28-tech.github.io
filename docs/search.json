@@ -11,21 +11,21 @@
     "href": "big-tech-stock-prices.html",
     "title": "Big Tech Stock Prices in 2022",
     "section": "",
-    "text": "How did Apple and Microsoft’s adjusted closing stock prices change during 2022?\nThis dataset was shared by TidyTuesday on February 7, 2023. It contains daily stock prices for 14 technology companies. Each row is one company’s stock on one trading day. For this graph, I use stock_symbol to choose Apple (AAPL) and Microsoft (MSFT), date for the horizontal axis, and adj_close for the vertical axis. Adjusted close accounts for stock splits and dividends.\n\nlibrary(tidyverse)\n\nbig_tech_stock_prices &lt;- read_csv(\n  \"https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-02-07/big_tech_stock_prices.csv\"\n)"
+    "text": "How did Apple and Microsoft’s adjusted closing stock prices change during 2022?\nThis dataset was shared by TidyTuesday on February 7, 2023. It contains daily stock prices for 14 technology companies. Each row is one company’s stock on one trading day. For this graph, I use stock_symbol to choose Apple (AAPL) and Microsoft (MSFT), date for the horizontal axis, and adj_close for the vertical axis. Adjusted close accounts for stock splits and dividends.\n\nlibrary(tidyverse)\nlibrary(lubridate)\n\nbig_tech_stock_prices &lt;- read_csv(\n  \"https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-02-07/big_tech_stock_prices.csv\"\n)"
   },
   {
     "objectID": "big-tech-stock-prices.html#question",
     "href": "big-tech-stock-prices.html#question",
     "title": "Big Tech Stock Prices in 2022",
     "section": "",
-    "text": "How did Apple and Microsoft’s adjusted closing stock prices change during 2022?\nThis dataset was shared by TidyTuesday on February 7, 2023. It contains daily stock prices for 14 technology companies. Each row is one company’s stock on one trading day. For this graph, I use stock_symbol to choose Apple (AAPL) and Microsoft (MSFT), date for the horizontal axis, and adj_close for the vertical axis. Adjusted close accounts for stock splits and dividends.\n\nlibrary(tidyverse)\n\nbig_tech_stock_prices &lt;- read_csv(\n  \"https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-02-07/big_tech_stock_prices.csv\"\n)"
+    "text": "How did Apple and Microsoft’s adjusted closing stock prices change during 2022?\nThis dataset was shared by TidyTuesday on February 7, 2023. It contains daily stock prices for 14 technology companies. Each row is one company’s stock on one trading day. For this graph, I use stock_symbol to choose Apple (AAPL) and Microsoft (MSFT), date for the horizontal axis, and adj_close for the vertical axis. Adjusted close accounts for stock splits and dividends.\n\nlibrary(tidyverse)\nlibrary(lubridate)\n\nbig_tech_stock_prices &lt;- read_csv(\n  \"https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-02-07/big_tech_stock_prices.csv\"\n)"
   },
   {
     "objectID": "big-tech-stock-prices.html#choose-the-observations",
     "href": "big-tech-stock-prices.html#choose-the-observations",
     "title": "Big Tech Stock Prices in 2022",
     "section": "Choose the observations",
-    "text": "Choose the observations\nI keep Apple and Microsoft trading days in 2022. There are 250 rows for each company in this period, and none of these rows is missing a date or adjusted closing price. Non-trading days are not included in the dataset.\n\nstocks_2022 &lt;- big_tech_stock_prices |&gt;\n  filter(\n    stock_symbol == \"AAPL\" | stock_symbol == \"MSFT\",\n    date &gt;= as.Date(\"2022-01-01\"),\n    date &lt;= as.Date(\"2022-12-31\")\n  )"
+    "text": "Choose the observations\nI keep Apple and Microsoft trading days in 2022. There are 250 rows for each company in this period, and none of these rows is missing a date or adjusted closing price. Non-trading days are not included in the dataset.\n\nstocks_2022 &lt;- big_tech_stock_prices |&gt;\n  filter(\n    stock_symbol == \"AAPL\" | stock_symbol == \"MSFT\",\n    date &gt;= ymd(\"2022-01-01\"),\n    date &lt;= ymd(\"2022-12-31\")\n  )"
   },
   {
     "objectID": "big-tech-stock-prices.html#make-a-graph",
@@ -60,7 +60,7 @@
     "href": "income-inequality.html#choose-the-observations",
     "title": "Income Inequality Before and After Taxes",
     "section": "Choose the observations",
-    "text": "Choose the observations\nI use 2020 because the dataset has both Gini measures for 19 countries in that year. There are 31 rows for 2020; 12 have no pre-tax Gini value, while none are missing the post-tax value. I remove rows missing either measure. This means the graph compares only countries with both values available, not every country in the world.\n\ninequality_2020 &lt;- income_inequality |&gt;\n  filter(\n    Year == 2020,\n    !is.na(gini_mi_eq),\n    !is.na(gini_dhi_eq)\n  )"
+    "text": "Choose the observations\nI use 2020 because the dataset has both Gini measures for 19 countries in that year. There are 31 rows for 2020; 12 have no pre-tax Gini value, while none are missing the post-tax value. Gini values run from 0 to 1, so filtering for values at least 0 keeps the recorded values and drops the missing rows. This means the graph compares only countries with both values available, not every country in the world.\n\ninequality_2020 &lt;- income_inequality |&gt;\n  filter(\n    Year == 2020,\n    gini_mi_eq &gt;= 0,\n    gini_dhi_eq &gt;= 0\n  )"
   },
   {
     "objectID": "income-inequality.html#make-a-graph",
