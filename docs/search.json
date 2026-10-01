@@ -11,28 +11,28 @@
     "href": "income-inequality.html",
     "title": "Income Inequality Before and After Taxes",
     "section": "",
-    "text": "The Gini coefficient measures income inequality from 0 to 1, with higher values representing greater inequality. This analysis examines which countries experience the largest reduction in inequality after taxes and government benefits.\nThe data come from the TidyTuesday Income Inequality dataset.\n\nlibrary(tidyverse)\n\nincome_inequality &lt;- read_csv(\n  \"https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-08-05/income_inequality_processed.csv\"\n)"
+    "text": "How do pre-tax and post-tax income inequality compare across countries in 2020?\nThe Gini coefficient measures income inequality from 0 to 1. Higher numbers mean more inequality. The data come from TidyTuesday’s income inequality dataset.\n\nlibrary(tidyverse)\n\nincome_inequality &lt;- read_csv(\n  \"https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-08-05/income_inequality_processed.csv\"\n)"
   },
   {
-    "objectID": "income-inequality.html#introduction",
-    "href": "income-inequality.html#introduction",
+    "objectID": "income-inequality.html#question",
+    "href": "income-inequality.html#question",
     "title": "Income Inequality Before and After Taxes",
     "section": "",
-    "text": "The Gini coefficient measures income inequality from 0 to 1, with higher values representing greater inequality. This analysis examines which countries experience the largest reduction in inequality after taxes and government benefits.\nThe data come from the TidyTuesday Income Inequality dataset.\n\nlibrary(tidyverse)\n\nincome_inequality &lt;- read_csv(\n  \"https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-08-05/income_inequality_processed.csv\"\n)"
+    "text": "How do pre-tax and post-tax income inequality compare across countries in 2020?\nThe Gini coefficient measures income inequality from 0 to 1. Higher numbers mean more inequality. The data come from TidyTuesday’s income inequality dataset.\n\nlibrary(tidyverse)\n\nincome_inequality &lt;- read_csv(\n  \"https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-08-05/income_inequality_processed.csv\"\n)"
   },
   {
-    "objectID": "income-inequality.html#preparing-the-data",
-    "href": "income-inequality.html#preparing-the-data",
+    "objectID": "income-inequality.html#choose-the-observations",
+    "href": "income-inequality.html#choose-the-observations",
     "title": "Income Inequality Before and After Taxes",
-    "section": "Preparing the data",
-    "text": "Preparing the data\nFor each country, this analysis uses its most recent observation and calculates the difference between its pre-tax and post-tax Gini coefficients. It then focuses on countries where the difference is at least 0.18.\n\nlatest_inequality &lt;- income_inequality |&gt;\n  filter(\n    !is.na(Code),\n    !is.na(gini_mi_eq),\n    !is.na(gini_dhi_eq)\n  ) |&gt;\n  group_by(Entity) |&gt;\n  filter(Year == max(Year)) |&gt;\n  mutate(\n    inequality_reduction = gini_mi_eq - gini_dhi_eq\n  ) |&gt;\n  arrange(desc(inequality_reduction))\n\nlarge_reductions &lt;- latest_inequality |&gt;\n  filter(inequality_reduction &gt;= 0.18)"
+    "section": "Choose the observations",
+    "text": "Choose the observations\nI use 2020 because the dataset has both Gini measures for 19 countries in that year. I remove rows missing either measure.\n\ninequality_2020 &lt;- income_inequality |&gt;\n  filter(\n    Year == 2020,\n    !is.na(gini_mi_eq),\n    !is.na(gini_dhi_eq)\n  )"
   },
   {
-    "objectID": "income-inequality.html#which-countries-reduce-inequality-the-most",
-    "href": "income-inequality.html#which-countries-reduce-inequality-the-most",
+    "objectID": "income-inequality.html#make-a-graph",
+    "href": "income-inequality.html#make-a-graph",
     "title": "Income Inequality Before and After Taxes",
-    "section": "Which countries reduce inequality the most?",
-    "text": "Which countries reduce inequality the most?\n\nggplot(\n  large_reductions,\n  aes(\n    x = inequality_reduction,\n    y = Entity\n  )\n) +\n  geom_point(size = 3, color = \"#2C7FB8\") +\n  labs(\n    title = \"Countries with large reductions in income inequality\",\n    subtitle = \"Difference between pre-tax and post-tax Gini coefficients\",\n    x = \"Reduction in Gini coefficient\",\n    y = NULL,\n    caption = \"Source: Our World in Data via TidyTuesday\"\n  ) +\n  theme_minimal()\n\n\n\n\n\n\n\n\nThe graph shows countries whose pre-tax Gini coefficient is at least 0.18 higher than their post-tax Gini coefficient, using each country’s most recent available observation. A larger difference indicates that taxes and government benefits are associated with a greater reduction in measured income inequality."
+    "section": "Make a graph",
+    "text": "Make a graph\nEach point represents one country. The horizontal position shows its pre-tax Gini coefficient, and the vertical position shows its post-tax Gini coefficient.\n\nggplot(inequality_2020, aes(x = gini_mi_eq, y = gini_dhi_eq)) +\n  geom_point() +\n  labs(\n    title = \"Income inequality before and after taxes in 2020\",\n    x = \"Pre-tax Gini coefficient\",\n    y = \"Post-tax Gini coefficient\",\n    caption = \"Source: Our World in Data via TidyTuesday\"\n  ) +\n  theme_minimal()\n\n\n\n\n\n\n\n\nIn this dataset, the post-tax Gini coefficient is lower than the pre-tax coefficient for all 19 countries shown. This is a comparison of the measures, not proof that a particular policy caused the difference."
   },
   {
     "objectID": "index.html",
