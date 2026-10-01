@@ -7,6 +7,20 @@
   border-radius: 12px;
 }
 
+.hero-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 260px;
+  gap: 2.5rem;
+  align-items: center;
+}
+
+.hero-photo {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
 .home-hero h1 {
   margin-top: 0.35rem;
   font-size: clamp(2.1rem, 5vw, 3.5rem);
@@ -50,6 +64,14 @@
 }
 
 @media (max-width: 600px) {
+  .hero-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-photo {
+    max-width: 260px;
+  }
+
   .home-hero {
     margin: 1rem;
     padding: 1.75rem;
