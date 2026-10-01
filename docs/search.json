@@ -32,7 +32,7 @@
     "href": "income-inequality.html#make-a-graph",
     "title": "Income Inequality Before and After Taxes",
     "section": "Make a graph",
-    "text": "Make a graph\nEach point represents one country. The horizontal position shows its pre-tax Gini coefficient, and the vertical position shows its post-tax Gini coefficient.\n\nggplot(inequality_2020, aes(x = gini_mi_eq, y = gini_dhi_eq)) +\n  geom_point() +\n  labs(\n    title = \"Income inequality before and after taxes in 2020\",\n    x = \"Pre-tax Gini coefficient\",\n    y = \"Post-tax Gini coefficient\",\n    caption = \"Source: Our World in Data via TidyTuesday\"\n  ) +\n  theme_minimal()\n\n\n\n\n\n\n\n\nIn this dataset, the post-tax Gini coefficient is lower than the pre-tax coefficient for all 19 countries shown. This is a comparison of the measures, not proof that a particular policy caused the difference."
+    "text": "Make a graph\nEach point represents one country. The horizontal position shows its pre-tax Gini coefficient, and the vertical position shows its post-tax Gini coefficient.\n\nggplot(inequality_2020, aes(x = gini_mi_eq, y = gini_dhi_eq)) +\n  geom_point() +\n  labs(\n    title = \"Income inequality before and after taxes in 2020\",\n    x = \"Pre-tax Gini coefficient\",\n    y = \"Post-tax Gini coefficient\",\n    caption = \"Source: Our World in Data via TidyTuesday\"\n  )\n\n\n\n\n\n\n\n\nIn this dataset, the post-tax Gini coefficient is lower than the pre-tax coefficient for all 19 countries shown. This is a comparison of the measures, not proof that a particular policy caused the difference."
   },
   {
     "objectID": "index.html",
