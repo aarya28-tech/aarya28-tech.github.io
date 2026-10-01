@@ -11,21 +11,21 @@
     "href": "income-inequality.html",
     "title": "Income Inequality Before and After Taxes",
     "section": "",
-    "text": "How do pre-tax and post-tax income inequality compare across countries in 2020?\nThe Gini coefficient measures income inequality from 0 to 1. Higher numbers mean more inequality. The data come from TidyTuesday’s income inequality dataset.\n\nlibrary(tidyverse)\n\nincome_inequality &lt;- read_csv(\n  \"https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-08-05/income_inequality_processed.csv\"\n)"
+    "text": "How do pre-tax and post-tax income inequality compare across countries in 2020?\nThe Gini coefficient measures income inequality from 0 to 1. Higher numbers mean more inequality. The data come from TidyTuesday’s income inequality dataset.\nIn the file used here, each row is a country (or region) in one year. I use Year to select 2020, gini_mi_eq for the pre-tax measure, and gini_dhi_eq for the post-tax measure. Both measures adjust income for household size. “Pre-tax” and “post-tax” are short names for income before and after taxes and benefits.\n\nlibrary(tidyverse)\n\nincome_inequality &lt;- read_csv(\n  \"https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-08-05/income_inequality_processed.csv\"\n)"
   },
   {
     "objectID": "income-inequality.html#question",
     "href": "income-inequality.html#question",
     "title": "Income Inequality Before and After Taxes",
     "section": "",
-    "text": "How do pre-tax and post-tax income inequality compare across countries in 2020?\nThe Gini coefficient measures income inequality from 0 to 1. Higher numbers mean more inequality. The data come from TidyTuesday’s income inequality dataset.\n\nlibrary(tidyverse)\n\nincome_inequality &lt;- read_csv(\n  \"https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-08-05/income_inequality_processed.csv\"\n)"
+    "text": "How do pre-tax and post-tax income inequality compare across countries in 2020?\nThe Gini coefficient measures income inequality from 0 to 1. Higher numbers mean more inequality. The data come from TidyTuesday’s income inequality dataset.\nIn the file used here, each row is a country (or region) in one year. I use Year to select 2020, gini_mi_eq for the pre-tax measure, and gini_dhi_eq for the post-tax measure. Both measures adjust income for household size. “Pre-tax” and “post-tax” are short names for income before and after taxes and benefits.\n\nlibrary(tidyverse)\n\nincome_inequality &lt;- read_csv(\n  \"https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-08-05/income_inequality_processed.csv\"\n)"
   },
   {
     "objectID": "income-inequality.html#choose-the-observations",
     "href": "income-inequality.html#choose-the-observations",
     "title": "Income Inequality Before and After Taxes",
     "section": "Choose the observations",
-    "text": "Choose the observations\nI use 2020 because the dataset has both Gini measures for 19 countries in that year. I remove rows missing either measure.\n\ninequality_2020 &lt;- income_inequality |&gt;\n  filter(\n    Year == 2020,\n    !is.na(gini_mi_eq),\n    !is.na(gini_dhi_eq)\n  )"
+    "text": "Choose the observations\nI use 2020 because the dataset has both Gini measures for 19 countries in that year. There are 31 rows for 2020; 12 have no pre-tax Gini value, while none are missing the post-tax value. I remove rows missing either measure. This means the graph compares only countries with both values available, not every country in the world.\n\ninequality_2020 &lt;- income_inequality |&gt;\n  filter(\n    Year == 2020,\n    !is.na(gini_mi_eq),\n    !is.na(gini_dhi_eq)\n  )"
   },
   {
     "objectID": "income-inequality.html#make-a-graph",
@@ -54,5 +54,12 @@
     "title": "Aditya Arya | Data Science",
     "section": "About this project",
     "text": "About this project\nThis site is made with Quarto and R for Foundations of Data Science. The source files, including the .qmd pages and rendered website, are in the GitHub repository."
+  },
+  {
+    "objectID": "income-inequality.html#sources",
+    "href": "income-inequality.html#sources",
+    "title": "Income Inequality Before and After Taxes",
+    "section": "Sources",
+    "text": "Sources\n\nTidyTuesday. (2025, August 5). Income Inequality Before and After Taxes (data and variable descriptions).\nHasell, J. (2023, July 3). Income inequality before and after taxes: how much do countries redistribute income? Our World in Data (original data processing and explanation).\nLuxembourg Income Study. (2025). LIS Database (underlying household-income data, as credited by TidyTuesday and Our World in Data)."
   }
 ]

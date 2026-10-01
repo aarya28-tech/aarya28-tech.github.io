@@ -2,6 +2,9 @@
 title: "Income Inequality Before and After Taxes"
 author: "Aditya Arya"
 format: html
+execute:
+  message: false
+  warning: false
 ---
 
 ## Question
@@ -10,10 +13,9 @@ How do pre-tax and post-tax income inequality compare across countries in 2020?
 
 The Gini coefficient measures income inequality from 0 to 1. Higher numbers mean more inequality. The data come from [TidyTuesday's income inequality dataset](https://github.com/rfordatascience/tidytuesday/tree/main/data/2025/2025-08-05).
 
-```{r}
-#| message: false
-#| warning: false
+In the file used here, each row is a country (or region) in one year. I use `Year` to select 2020, `gini_mi_eq` for the pre-tax measure, and `gini_dhi_eq` for the post-tax measure. Both measures adjust income for household size. "Pre-tax" and "post-tax" are short names for income before and after taxes **and benefits**.
 
+```{r}
 library(tidyverse)
 
 income_inequality <- read_csv(
@@ -23,7 +25,7 @@ income_inequality <- read_csv(
 
 ## Choose the observations
 
-I use 2020 because the dataset has both Gini measures for 19 countries in that year. I remove rows missing either measure.
+I use 2020 because the dataset has both Gini measures for 19 countries in that year. There are 31 rows for 2020; 12 have no pre-tax Gini value, while none are missing the post-tax value. I remove rows missing either measure. This means the graph compares only countries with both values available, not every country in the world.
 
 ```{r}
 inequality_2020 <- income_inequality |>
@@ -50,3 +52,9 @@ ggplot(inequality_2020, aes(x = gini_mi_eq, y = gini_dhi_eq)) +
 ```
 
 In this dataset, the post-tax Gini coefficient is lower than the pre-tax coefficient for all 19 countries shown. This is a comparison of the measures, not proof that a particular policy caused the difference.
+
+## Sources
+
+- TidyTuesday. (2025, August 5). [Income Inequality Before and After Taxes](https://github.com/rfordatascience/tidytuesday/tree/main/data/2025/2025-08-05) (data and variable descriptions).
+- Hasell, J. (2023, July 3). [Income inequality before and after taxes: how much do countries redistribute income?](https://ourworldindata.org/income-inequality-before-and-after-taxes) *Our World in Data* (original data processing and explanation).
+- Luxembourg Income Study. (2025). [LIS Database](https://www.lisdatacenter.org/our-data/lis-database/) (underlying household-income data, as credited by TidyTuesday and Our World in Data).
