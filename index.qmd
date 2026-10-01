@@ -15,7 +15,7 @@ I'm Aditya Arya, a junior at Claremont McKenna College studying economics and da
 [Explore Data Viz](#data-viz){.btn .btn-primary} [View the GitHub repository](https://github.com/aarya28-tech/aarya28-tech.github.io){.btn .btn-outline-primary}
 :::
 
-<img src="images/aditya-portrait.jpeg" alt="Aditya Arya outdoors in a suit" class="hero-photo">
+<img src="images/aditya.jpeg" alt="Aditya Arya outdoors in a suit" class="hero-photo">
 :::
 :::
 

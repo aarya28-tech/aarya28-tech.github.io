@@ -11,6 +11,7 @@ execute:
 
 How do pre-tax and post-tax income inequality compare across countries in 2020?
 
+
 The Gini coefficient measures income inequality from 0 to 1. Higher numbers mean more inequality. The data come from [TidyTuesday's income inequality dataset](https://github.com/rfordatascience/tidytuesday/tree/main/data/2025/2025-08-05).
 
 In the file used here, each row is a country (or region) in one year. I use `Year` to select 2020, `gini_mi_eq` for the pre-tax measure, and `gini_dhi_eq` for the post-tax measure. Both measures adjust income for household size. "Pre-tax" and "post-tax" are short names for income before and after taxes **and benefits**.

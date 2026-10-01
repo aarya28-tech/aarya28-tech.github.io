@@ -11,6 +11,7 @@ execute:
 
 How did Apple and Microsoft's adjusted closing stock prices change during 2022?
 
+
 This dataset was shared by [TidyTuesday on February 7, 2023](https://github.com/rfordatascience/tidytuesday/tree/main/data/2023/2023-02-07). It contains daily stock prices for 14 technology companies. Each row is one company's stock on one trading day. For this graph, I use `stock_symbol` to choose Apple (`AAPL`) and Microsoft (`MSFT`), `date` for the horizontal axis, and `adj_close` for the vertical axis. Adjusted close accounts for stock splits and dividends.
 
 ```{r}
