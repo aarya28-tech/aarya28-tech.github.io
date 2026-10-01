@@ -24,6 +24,14 @@ How do pre-tax and post-tax income inequality compare across countries in 2020? 
 [Read the analysis →](income-inequality.qmd)
 :::
 
+::: {.project-card}
+### Big Tech stock prices in 2022
+
+How did Apple and Microsoft's adjusted closing stock prices change during 2022? This analysis compares their daily prices with a line graph.
+
+[Read the analysis →](big-tech-stock-prices.qmd)
+:::
+
 ## About this project
 
 This site is made with Quarto and R for Foundations of Data Science. The source files, including the `.qmd` pages and rendered website, are in the [GitHub repository](https://github.com/aarya28-tech/aarya28-tech.github.io).

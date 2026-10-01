@@ -4,7 +4,42 @@
     "href": "about.html",
     "title": "About Aditya",
     "section": "",
-    "text": "I’m Aditya Arya, a junior at Claremont McKenna College. This website presents my work for Foundations of Data Science in R.\nThe Data Viz section contains my TidyTuesday analysis, including the data source, R code, graph, and interpretation.\nYou can find the website’s files in the GitHub repository."
+    "text": "I’m Aditya Arya, a junior at Claremont McKenna College. This website presents my work for Foundations of Data Science in R.\nThe Data Viz menu contains two TidyTuesday analyses: income inequality and Big Tech stock prices. Each page shows the data source, R code, graph, and interpretation.\nYou can find the website’s files in the GitHub repository."
+  },
+  {
+    "objectID": "big-tech-stock-prices.html",
+    "href": "big-tech-stock-prices.html",
+    "title": "Big Tech Stock Prices in 2022",
+    "section": "",
+    "text": "How did Apple and Microsoft’s adjusted closing stock prices change during 2022?\nThis dataset was shared by TidyTuesday on February 7, 2023. It contains daily stock prices for 14 technology companies. Each row is one company’s stock on one trading day. For this graph, I use stock_symbol to choose Apple (AAPL) and Microsoft (MSFT), date for the horizontal axis, and adj_close for the vertical axis. Adjusted close accounts for stock splits and dividends.\n\nlibrary(tidyverse)\n\nbig_tech_stock_prices &lt;- read_csv(\n  \"https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-02-07/big_tech_stock_prices.csv\"\n)"
+  },
+  {
+    "objectID": "big-tech-stock-prices.html#question",
+    "href": "big-tech-stock-prices.html#question",
+    "title": "Big Tech Stock Prices in 2022",
+    "section": "",
+    "text": "How did Apple and Microsoft’s adjusted closing stock prices change during 2022?\nThis dataset was shared by TidyTuesday on February 7, 2023. It contains daily stock prices for 14 technology companies. Each row is one company’s stock on one trading day. For this graph, I use stock_symbol to choose Apple (AAPL) and Microsoft (MSFT), date for the horizontal axis, and adj_close for the vertical axis. Adjusted close accounts for stock splits and dividends.\n\nlibrary(tidyverse)\n\nbig_tech_stock_prices &lt;- read_csv(\n  \"https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-02-07/big_tech_stock_prices.csv\"\n)"
+  },
+  {
+    "objectID": "big-tech-stock-prices.html#choose-the-observations",
+    "href": "big-tech-stock-prices.html#choose-the-observations",
+    "title": "Big Tech Stock Prices in 2022",
+    "section": "Choose the observations",
+    "text": "Choose the observations\nI keep Apple and Microsoft trading days in 2022. There are 250 rows for each company in this period, and none of these rows is missing a date or adjusted closing price. Non-trading days are not included in the dataset.\n\nstocks_2022 &lt;- big_tech_stock_prices |&gt;\n  filter(\n    stock_symbol == \"AAPL\" | stock_symbol == \"MSFT\",\n    date &gt;= as.Date(\"2022-01-01\"),\n    date &lt;= as.Date(\"2022-12-31\")\n  )"
+  },
+  {
+    "objectID": "big-tech-stock-prices.html#make-a-graph",
+    "href": "big-tech-stock-prices.html#make-a-graph",
+    "title": "Big Tech Stock Prices in 2022",
+    "section": "Make a graph",
+    "text": "Make a graph\nEach line shows one company’s adjusted closing price per share on the trading days in the dataset.\n\nggplot(stocks_2022, aes(x = date, y = adj_close, color = stock_symbol)) +\n  geom_line() +\n  labs(\n    title = \"Apple and Microsoft stock prices in 2022\",\n    x = \"Date\",\n    y = \"Adjusted closing price (US dollars per share)\",\n    color = \"Company\",\n    caption = \"Source: Yahoo Finance via Evan Gower and TidyTuesday\"\n  )\n\n\n\n\n\n\n\n\nBoth lines end lower than they begin, so both stocks had lower adjusted closing prices at the end of 2022 than at the start. The graph compares prices per share, not company values. A higher share price does not by itself mean that one company was worth more than the other."
+  },
+  {
+    "objectID": "big-tech-stock-prices.html#sources",
+    "href": "big-tech-stock-prices.html#sources",
+    "title": "Big Tech Stock Prices in 2022",
+    "section": "Sources",
+    "text": "Sources\n\nTidyTuesday. (2023, February 7). Big Tech Stock Prices (dataset and variable descriptions).\nGower, E. Big Tech Stock Prices. Kaggle (the dataset TidyTuesday used).\nYahoo Finance. Historical market data (original stock-price source, as credited by TidyTuesday)."
   },
   {
     "objectID": "income-inequality.html",
@@ -35,6 +70,13 @@
     "text": "Make a graph\nEach point represents one country. The horizontal position shows its pre-tax Gini coefficient, and the vertical position shows its post-tax Gini coefficient.\n\nggplot(inequality_2020, aes(x = gini_mi_eq, y = gini_dhi_eq)) +\n  geom_point() +\n  labs(\n    title = \"Income inequality before and after taxes in 2020\",\n    x = \"Pre-tax Gini coefficient\",\n    y = \"Post-tax Gini coefficient\",\n    caption = \"Source: Our World in Data via TidyTuesday\"\n  )\n\n\n\n\n\n\n\n\nIn this dataset, the post-tax Gini coefficient is lower than the pre-tax coefficient for all 19 countries shown. This is a comparison of the measures, not proof that a particular policy caused the difference."
   },
   {
+    "objectID": "income-inequality.html#sources",
+    "href": "income-inequality.html#sources",
+    "title": "Income Inequality Before and After Taxes",
+    "section": "Sources",
+    "text": "Sources\n\nTidyTuesday. (2025, August 5). Income Inequality Before and After Taxes (data and variable descriptions).\nHasell, J. (2023, July 3). Income inequality before and after taxes: how much do countries redistribute income? Our World in Data (original data processing and explanation).\nLuxembourg Income Study. (2025). LIS Database (underlying household-income data, as credited by TidyTuesday and Our World in Data)."
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "Aditya Arya | Data Science",
@@ -46,7 +88,7 @@
     "href": "index.html#data-viz",
     "title": "Aditya Arya | Data Science",
     "section": "Data Viz",
-    "text": "Data Viz\n\nIncome inequality before and after taxes\nHow do pre-tax and post-tax income inequality compare across countries in 2020? This analysis uses data shared through TidyTuesday and a scatterplot made in R.\nRead the analysis →"
+    "text": "Data Viz\n\nIncome inequality before and after taxes\nHow do pre-tax and post-tax income inequality compare across countries in 2020? This analysis uses data shared through TidyTuesday and a scatterplot made in R.\nRead the analysis →\n\n\nBig Tech stock prices in 2022\nHow did Apple and Microsoft’s adjusted closing stock prices change during 2022? This analysis compares their daily prices with a line graph.\nRead the analysis →"
   },
   {
     "objectID": "index.html#about-this-project",
@@ -54,12 +96,5 @@
     "title": "Aditya Arya | Data Science",
     "section": "About this project",
     "text": "About this project\nThis site is made with Quarto and R for Foundations of Data Science. The source files, including the .qmd pages and rendered website, are in the GitHub repository."
-  },
-  {
-    "objectID": "income-inequality.html#sources",
-    "href": "income-inequality.html#sources",
-    "title": "Income Inequality Before and After Taxes",
-    "section": "Sources",
-    "text": "Sources\n\nTidyTuesday. (2025, August 5). Income Inequality Before and After Taxes (data and variable descriptions).\nHasell, J. (2023, July 3). Income inequality before and after taxes: how much do countries redistribute income? Our World in Data (original data processing and explanation).\nLuxembourg Income Study. (2025). LIS Database (underlying household-income data, as credited by TidyTuesday and Our World in Data)."
   }
 ]

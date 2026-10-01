@@ -4,6 +4,6 @@ title: "About Aditya"
 
 I’m Aditya Arya, a junior at Claremont McKenna College. This website presents my work for Foundations of Data Science in R.
 
-The [Data Viz](income-inequality.qmd) section contains my TidyTuesday analysis, including the data source, R code, graph, and interpretation.
+The Data Viz menu contains two TidyTuesday analyses: [income inequality](income-inequality.qmd) and [Big Tech stock prices](big-tech-stock-prices.qmd). Each page shows the data source, R code, graph, and interpretation.
 
 You can find the website’s files in the [GitHub repository](https://github.com/aarya28-tech/aarya28-tech.github.io).

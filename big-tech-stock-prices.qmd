@@ -1,0 +1,60 @@
+---
+title: "Big Tech Stock Prices in 2022"
+author: "Aditya Arya"
+format: html
+execute:
+  message: false
+  warning: false
+---
+
+## Question
+
+How did Apple and Microsoft's adjusted closing stock prices change during 2022?
+
+This dataset was shared by [TidyTuesday on February 7, 2023](https://github.com/rfordatascience/tidytuesday/tree/main/data/2023/2023-02-07). It contains daily stock prices for 14 technology companies. Each row is one company's stock on one trading day. For this graph, I use `stock_symbol` to choose Apple (`AAPL`) and Microsoft (`MSFT`), `date` for the horizontal axis, and `adj_close` for the vertical axis. Adjusted close accounts for stock splits and dividends.
+
+```{r}
+library(tidyverse)
+
+big_tech_stock_prices <- read_csv(
+  "https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-02-07/big_tech_stock_prices.csv"
+)
+```
+
+## Choose the observations
+
+I keep Apple and Microsoft trading days in 2022. There are 250 rows for each company in this period, and none of these rows is missing a date or adjusted closing price. Non-trading days are not included in the dataset.
+
+```{r}
+stocks_2022 <- big_tech_stock_prices |>
+  filter(
+    stock_symbol == "AAPL" | stock_symbol == "MSFT",
+    date >= as.Date("2022-01-01"),
+    date <= as.Date("2022-12-31")
+  )
+```
+
+## Make a graph
+
+Each line shows one company's adjusted closing price per share on the trading days in the dataset.
+
+```{r}
+#| fig-alt: "Line chart of daily adjusted closing prices in 2022. Both Apple and Microsoft end the year below where they begin."
+ggplot(stocks_2022, aes(x = date, y = adj_close, color = stock_symbol)) +
+  geom_line() +
+  labs(
+    title = "Apple and Microsoft stock prices in 2022",
+    x = "Date",
+    y = "Adjusted closing price (US dollars per share)",
+    color = "Company",
+    caption = "Source: Yahoo Finance via Evan Gower and TidyTuesday"
+  )
+```
+
+Both lines end lower than they begin, so both stocks had lower adjusted closing prices at the end of 2022 than at the start. The graph compares prices per share, not company values. A higher share price does not by itself mean that one company was worth more than the other.
+
+## Sources
+
+- TidyTuesday. (2023, February 7). [Big Tech Stock Prices](https://github.com/rfordatascience/tidytuesday/tree/main/data/2023/2023-02-07) (dataset and variable descriptions).
+- Gower, E. [Big Tech Stock Prices](https://www.kaggle.com/datasets/evangower/big-tech-stock-prices). *Kaggle* (the dataset TidyTuesday used).
+- Yahoo Finance. [Historical market data](https://finance.yahoo.com/) (original stock-price source, as credited by TidyTuesday).

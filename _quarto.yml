@@ -14,6 +14,8 @@ website:
         menu:
           - href: income-inequality.qmd
             text: Income inequality
+          - href: big-tech-stock-prices.qmd
+            text: Big Tech stocks
 
 format:
   html:

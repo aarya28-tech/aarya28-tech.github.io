@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Aditya Arya">
 
-<title>About Aditya – Aditya Arya</title>
+<title>Big Tech Stock Prices in 2022 – Aditya Arya</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -93,7 +128,7 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./about.html" aria-current="page"> 
+    <a class="nav-link" href="./about.html"> 
 <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item dropdown ">
@@ -122,21 +157,36 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#question" id="toc-question" class="nav-link active" data-scroll-target="#question">Question</a></li>
+  <li><a href="#choose-the-observations" id="toc-choose-the-observations" class="nav-link" data-scroll-target="#choose-the-observations">Choose the observations</a></li>
+  <li><a href="#make-a-graph" id="toc-make-a-graph" class="nav-link" data-scroll-target="#make-a-graph">Make a graph</a></li>
+  <li><a href="#sources" id="toc-sources" class="nav-link" data-scroll-target="#sources">Sources</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">About Aditya</h1>
+<h1 class="title">Big Tech Stock Prices in 2022</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Aditya Arya </p>
+          </div>
+  </div>
     
   
     
@@ -147,11 +197,63 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>I’m Aditya Arya, a junior at Claremont McKenna College. This website presents my work for Foundations of Data Science in R.</p>
-<p>The Data Viz menu contains two TidyTuesday analyses: <a href="./income-inequality.html">income inequality</a> and <a href="./big-tech-stock-prices.html">Big Tech stock prices</a>. Each page shows the data source, R code, graph, and interpretation.</p>
-<p>You can find the website’s files in the <a href="https://github.com/aarya28-tech/aarya28-tech.github.io">GitHub repository</a>.</p>
+<section id="question" class="level2">
+<h2 class="anchored" data-anchor-id="question">Question</h2>
+<p>How did Apple and Microsoft’s adjusted closing stock prices change during 2022?</p>
+<p>This dataset was shared by <a href="https://github.com/rfordatascience/tidytuesday/tree/main/data/2023/2023-02-07">TidyTuesday on February 7, 2023</a>. It contains daily stock prices for 14 technology companies. Each row is one company’s stock on one trading day. For this graph, I use <code>stock_symbol</code> to choose Apple (<code>AAPL</code>) and Microsoft (<code>MSFT</code>), <code>date</code> for the horizontal axis, and <code>adj_close</code> for the vertical axis. Adjusted close accounts for stock splits and dividends.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>big_tech_stock_prices <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-02-07/big_tech_stock_prices.csv"</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="choose-the-observations" class="level2">
+<h2 class="anchored" data-anchor-id="choose-the-observations">Choose the observations</h2>
+<p>I keep Apple and Microsoft trading days in 2022. There are 250 rows for each company in this period, and none of these rows is missing a date or adjusted closing price. Non-trading days are not included in the dataset.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>stocks_2022 <span class="ot">&lt;-</span> big_tech_stock_prices <span class="sc">|&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    stock_symbol <span class="sc">==</span> <span class="st">"AAPL"</span> <span class="sc">|</span> stock_symbol <span class="sc">==</span> <span class="st">"MSFT"</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    date <span class="sc">&gt;=</span> <span class="fu">as.Date</span>(<span class="st">"2022-01-01"</span>),</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    date <span class="sc">&lt;=</span> <span class="fu">as.Date</span>(<span class="st">"2022-12-31"</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="make-a-graph" class="level2">
+<h2 class="anchored" data-anchor-id="make-a-graph">Make a graph</h2>
+<p>Each line shows one company’s adjusted closing price per share on the trading days in the dataset.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(stocks_2022, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> adj_close, <span class="at">color =</span> stock_symbol)) <span class="sc">+</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Apple and Microsoft stock prices in 2022"</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Date"</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Adjusted closing price (US dollars per share)"</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"Company"</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Source: Yahoo Finance via Evan Gower and TidyTuesday"</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="big-tech-stock-prices_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" alt="Line chart of daily adjusted closing prices in 2022. Both Apple and Microsoft end the year below where they begin." width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Both lines end lower than they begin, so both stocks had lower adjusted closing prices at the end of 2022 than at the start. The graph compares prices per share, not company values. A higher share price does not by itself mean that one company was worth more than the other.</p>
+</section>
+<section id="sources" class="level2">
+<h2 class="anchored" data-anchor-id="sources">Sources</h2>
+<ul>
+<li>TidyTuesday. (2023, February 7). <a href="https://github.com/rfordatascience/tidytuesday/tree/main/data/2023/2023-02-07">Big Tech Stock Prices</a> (dataset and variable descriptions).</li>
+<li>Gower, E. <a href="https://www.kaggle.com/datasets/evangower/big-tech-stock-prices">Big Tech Stock Prices</a>. <em>Kaggle</em> (the dataset TidyTuesday used).</li>
+<li>Yahoo Finance. <a href="https://finance.yahoo.com/">Historical market data</a> (original stock-price source, as credited by TidyTuesday).</li>
+</ul>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
