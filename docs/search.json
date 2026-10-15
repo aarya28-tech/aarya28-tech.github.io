@@ -7,39 +7,60 @@
     "text": "I’m Aditya Arya, a junior at Claremont McKenna College. This website presents my work for Foundations of Data Science in R.\nThe Data Viz menu contains two TidyTuesday analyses: income inequality and Big Tech stock prices. Each page shows the data source, R code, graph, and interpretation.\nYou can find the website’s files in the GitHub repository."
   },
   {
-    "objectID": "big-tech-stock-prices.html",
-    "href": "big-tech-stock-prices.html",
-    "title": "Big Tech Stock Prices in 2022",
+    "objectID": "brooklyn-nine-nine.html",
+    "href": "brooklyn-nine-nine.html",
+    "title": "Cool, Cool, Cool: Brooklyn Nine-Nine",
     "section": "",
-    "text": "How did Apple and Microsoft’s adjusted closing stock prices change during 2022?\nThis dataset was shared by TidyTuesday on February 7, 2023. It contains daily stock prices for 14 technology companies. Each row is one company’s stock on one trading day. For this graph, I use stock_symbol to choose Apple (AAPL) and Microsoft (MSFT), date for the horizontal axis, and adj_close for the vertical axis. Adjusted close accounts for stock splits and dividends.\n\nlibrary(tidyverse)\nlibrary(lubridate)\n\nbig_tech_stock_prices &lt;- read_csv(\n  \"https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-02-07/big_tech_stock_prices.csv\"\n)"
+    "text": "For this project, I wanted to find out how often “cool” appears in Brooklyn Nine-Nine, especially when it turns into “cool, cool, cool.” I also wanted to see how this changes across seasons.\nI count each “cool” and each repeated sequence separately. So “cool, cool, cool, cool” counts as four mentions of the word and one sequence. I use the available transcripts, which do not tell me who is speaking."
   },
   {
-    "objectID": "big-tech-stock-prices.html#question",
-    "href": "big-tech-stock-prices.html#question",
-    "title": "Big Tech Stock Prices in 2022",
+    "objectID": "brooklyn-nine-nine.html#question",
+    "href": "brooklyn-nine-nine.html#question",
+    "title": "Cool, Cool, Cool: Brooklyn Nine-Nine",
     "section": "",
-    "text": "How did Apple and Microsoft’s adjusted closing stock prices change during 2022?\nThis dataset was shared by TidyTuesday on February 7, 2023. It contains daily stock prices for 14 technology companies. Each row is one company’s stock on one trading day. For this graph, I use stock_symbol to choose Apple (AAPL) and Microsoft (MSFT), date for the horizontal axis, and adj_close for the vertical axis. Adjusted close accounts for stock splits and dividends.\n\nlibrary(tidyverse)\nlibrary(lubridate)\n\nbig_tech_stock_prices &lt;- read_csv(\n  \"https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-02-07/big_tech_stock_prices.csv\"\n)"
+    "text": "How often does the word “cool” appear in Brooklyn Nine-Nine transcripts, and how often is it repeated three or more times in a row? Does the frequency change across seasons?\nThis analysis counts the word itself and repeated sequences separately. For example, “cool, cool, cool, cool” contributes four word occurrences but one repeated sequence. The question is about the available transcripts, which do not identify who is speaking."
   },
   {
-    "objectID": "big-tech-stock-prices.html#choose-the-observations",
-    "href": "big-tech-stock-prices.html#choose-the-observations",
-    "title": "Big Tech Stock Prices in 2022",
-    "section": "Choose the observations",
-    "text": "Choose the observations\nI keep Apple and Microsoft trading days in 2022. There are 250 rows for each company in this period, and none of these rows is missing a date or adjusted closing price. Non-trading days are not included in the dataset.\n\nstocks_2022 &lt;- big_tech_stock_prices |&gt;\n  filter(\n    stock_symbol == \"AAPL\" | stock_symbol == \"MSFT\",\n    date &gt;= ymd(\"2022-01-01\"),\n    date &lt;= ymd(\"2022-12-31\")\n  )"
+    "objectID": "brooklyn-nine-nine.html#data-and-coverage",
+    "href": "brooklyn-nine-nine.html#data-and-coverage",
+    "title": "Cool, Cool, Cool: Brooklyn Nine-Nine",
+    "section": "Data and coverage",
+    "text": "Data and coverage\nThe data come from Atharva Naik’s Brooklyn Nine-Nine dataset, which credits SubsLikeScript as its transcript source. The original JSON files are stored in this website’s repository under data/brooklyn99. Each contains a list of transcript blocks.\nThere are 134 files across seasons 1–7. Some episodes are missing, and season 8 is absent. The file season-4/episode-11-DUPE.json is excluded because its episode identification is ambiguous; it is also much longer than the other season 4 files. The raw file is preserved. This leaves 133 files for analysis, rather than a complete record of the show.\nThe code below loads each file, extracts season and episode numbers from its path, and cleans the text. It removes identified subtitle credits, converts uppercase letters to lowercase, and standardizes spaces. Joining the blocks allows a repeated sequence to continue across a subtitle line break. Repeated dialogue is kept, since repetition is the subject of the analysis.\n\n\nShow R code\nlibrary(tidyverse)\n\nfiles &lt;- list.files(\n  \"data/brooklyn99\", pattern = \"\\\\.json$\",\n  recursive = TRUE, full.names = TRUE\n)\n\ntranscripts &lt;- tibble(source_file = files) |&gt;\n  mutate(\n    text = map_chr(source_file, function(file) {\n      lines &lt;- jsonlite::fromJSON(file)\n      lines &lt;- lines[!str_detect(\n        lines, regex(\"synced.*(chamallow|moustafa|maxpayne)\", ignore_case = TRUE)\n      )]\n      str_c(lines, collapse = \" \")\n    }),\n    season = as.integer(str_extract(source_file, \"(?&lt;=season-)\\\\d+\")),\n    episode = as.integer(str_extract(source_file, \"(?&lt;=episode-)\\\\d+\")),\n    title = str_remove(basename(source_file), \"^episode-\\\\d+-\"),\n    title = str_remove(title, \"\\\\.json$\"),\n    title = str_replace_all(title, \"_\", \" \")\n  )\n\nepisodes &lt;- transcripts |&gt;\n  filter(!str_detect(source_file, \"DUPE\")) |&gt;\n  mutate(\n    text = str_replace_all(text, fixed(\"Ripped By mstoll\"), \"\"),\n    text = str_replace_all(text, fixed(\"&amp;\"), \"&\"),\n    text = str_replace_all(text, \"&gt;\", \"\"),\n    text = str_squish(str_to_lower(text))\n  )"
   },
   {
-    "objectID": "big-tech-stock-prices.html#make-a-graph",
-    "href": "big-tech-stock-prices.html#make-a-graph",
-    "title": "Big Tech Stock Prices in 2022",
-    "section": "Make a graph",
-    "text": "Make a graph\nEach line shows one company’s adjusted closing price per share on the trading days in the dataset.\n\nggplot(stocks_2022, aes(x = date, y = adj_close, color = stock_symbol)) +\n  geom_line() +\n  labs(\n    title = \"Apple and Microsoft stock prices in 2022\",\n    x = \"Date\",\n    y = \"Adjusted closing price (US dollars per share)\",\n    color = \"Company\",\n    caption = \"Source: Yahoo Finance via Evan Gower and TidyTuesday\"\n  )\n\n\n\n\n\n\n\n\nApple and Microsoft’s stock prices often moved in similar directions during 2022, but this graph alone doesn’t show why. Both lines also end lower than they begin. These are prices per share, not the total values of the companies."
+    "objectID": "brooklyn-nine-nine.html#counting-rules",
+    "href": "brooklyn-nine-nine.html#counting-rules",
+    "title": "Cool, Cool, Cool: Brooklyn Nine-Nine",
+    "section": "Counting rules",
+    "text": "Counting rules\n\nCount “cool” as a whole word, regardless of capitalization. Words such as “cooler,” “coolest,” and “cooling” do not count.\nA repeated sequence contains at least three consecutive occurrences of “cool,” separated only by punctuation or spaces. Commas, periods, hyphens, and subtitle line breaks can separate them.\nCount the longest continuous sequence once. A sequence of six does not become two sequences of three.\nInclude every textual use of “cool,” including quoted repetitions and phrases such as “not cool.” These are word counts, not a classification of the speaker’s meaning.\n\nThe cool_pattern uses a negative lookbehind and a negative lookahead to prevent matching “cool” inside a longer word. In run_pattern, {2,} requires at least two additional occurrences after the first. The code also counts transcript words as letter/number groups, allowing internal apostrophes. This supplies a consistent denominator for comparing seasons.\n\n\nShow R code\ncool_pattern &lt;- \"(?&lt;!\\\\w)cool(?!\\\\w)\"\nrun_pattern &lt;- \"(?&lt;!\\\\w)cool(?!\\\\w)(?:[\\\\s\\\\p{P}]+cool(?!\\\\w)){2,}\"\nword_pattern &lt;- \"\\\\b\\\\w+(?:['’]\\\\w+)*\\\\b\"\n\nepisodes &lt;- episodes |&gt;\n  mutate(\n    words = str_count(text, word_pattern),\n    cool_mentions = str_count(text, cool_pattern),\n    runs = str_extract_all(text, run_pattern),\n    repeated_sequences = lengths(runs)\n  )\n\nruns &lt;- episodes |&gt;\n  select(season, episode, title, runs) |&gt;\n  unnest_longer(runs, values_to = \"sequence\") |&gt;\n  mutate(run_length = str_count(sequence, cool_pattern))\n\n\nAcross the retained files, there are 529 occurrences of “cool” and 22 repeated sequences. Those sequences contain 139 of the word occurrences, or about 26.3% of the total. The remaining occurrences can be single uses or pairs; they are not necessarily all isolated uses."
   },
   {
-    "objectID": "big-tech-stock-prices.html#sources",
-    "href": "big-tech-stock-prices.html#sources",
-    "title": "Big Tech Stock Prices in 2022",
-    "section": "Sources",
-    "text": "Sources\n\nTidyTuesday. (2023, February 7). Big Tech Stock Prices (dataset and variable descriptions).\nGower, E. Big Tech Stock Prices. Kaggle (the dataset TidyTuesday used).\nYahoo Finance. Historical market data (original stock-price source, as credited by TidyTuesday)."
+    "objectID": "brooklyn-nine-nine.html#does-the-frequency-change-by-season",
+    "href": "brooklyn-nine-nine.html#does-the-frequency-change-by-season",
+    "title": "Cool, Cool, Cool: Brooklyn Nine-Nine",
+    "section": "Does the frequency change by season?",
+    "text": "Does the frequency change by season?\nSeasons have different numbers of available transcripts and different amounts of dialogue. To account for this, each rate below divides the season’s total count by its total transcript words and multiplies by 1,000. These are pooled season rates, not averages of individual episode rates.\n\n\nShow R code\nseason_summary &lt;- episodes |&gt;\n  group_by(season) |&gt;\n  summarise(\n    transcript_files = n(),\n    words = sum(words),\n    cool_mentions = sum(cool_mentions),\n    repeated_sequences = sum(repeated_sequences),\n    .groups = \"drop\"\n  ) |&gt;\n  mutate(\n    cool_per_1000 = 1000 * cool_mentions / words,\n    runs_per_1000 = 1000 * repeated_sequences / words\n  )\n\nseason_plot_data &lt;- season_summary |&gt;\n  select(season, cool_per_1000, runs_per_1000) |&gt;\n  pivot_longer(\n    cols = c(cool_per_1000, runs_per_1000),\n    names_to = \"measure\", values_to = \"rate\"\n  ) |&gt;\n  mutate(measure = recode(\n    measure,\n    cool_per_1000 = \"All occurrences of cool\",\n    runs_per_1000 = \"Sequences of 3+ cools\"\n  ))\n\n\nggplot(season_plot_data, aes(x = season, y = rate)) +\n  geom_line(color = \"#245680\", linewidth = 0.7) +\n  geom_point(color = \"#245680\", size = 2.5) +\n  facet_wrap(~ measure, ncol = 1, scales = \"free_y\") +\n  scale_x_continuous(breaks = 1:7) +\n  scale_y_continuous(limits = c(0, NA)) +\n  labs(\n    title = \"How often does cool appear across seasons?\",\n    subtitle = \"Counts per 1,000 words in the available transcripts\",\n    x = \"Season\",\n    y = \"Occurrences or sequences per 1,000 words\",\n    caption = \"Source: Atharva Naik / SubsLikeScript; 133 retained files. Panels use different y-axis scales.\"\n  ) +\n  theme_minimal(base_size = 12)\n\n\n\n\n\n\n\n\n\nSeason 6 has the highest overall rate, at about 1.47 occurrences per 1,000 words. Season 1 has 54 occurrences but no sequences of three or more under this definition. Repeated sequences appear in the available files from season 2 onward.\nThe pattern does not rise steadily every season. It also should not be interpreted as a definitive trend for the whole show: missing episodes could change the season comparisons, particularly season 6, which has only 11 files in this dataset."
+  },
+  {
+    "objectID": "brooklyn-nine-nine.html#how-long-are-the-repeated-sequences",
+    "href": "brooklyn-nine-nine.html#how-long-are-the-repeated-sequences",
+    "title": "Cool, Cool, Cool: Brooklyn Nine-Nine",
+    "section": "How long are the repeated sequences?",
+    "text": "How long are the repeated sequences?\n\n\nShow R code\nrun_summary &lt;- runs |&gt;\n  count(run_length, name = \"sequences\")\n\ntop_episodes &lt;- episodes |&gt;\n  arrange(season, episode) |&gt;\n  slice_max(cool_mentions, n = 10, with_ties = FALSE) |&gt;\n  mutate(episode_label = str_c(\"S\", season, \" E\", episode, \": \", title))\n\nggplot(run_summary, aes(x = factor(run_length), y = sequences)) +\n  geom_col(fill = \"#245680\", width = 0.7) +\n  scale_y_continuous(breaks = seq(0, max(run_summary$sequences), by = 1)) +\n  labs(\n    title = \"Some cool sequences continue well beyond three repetitions\",\n    subtitle = \"Each continuous sequence of 3+ is counted once\",\n    x = \"Number of cool occurrences in a sequence\",\n    y = \"Number of sequences\",\n    caption = \"Source: Atharva Naik / SubsLikeScript; only observed sequence lengths are shown.\"\n  ) +\n  theme_minimal(base_size = 12)\n\n\n\n\n\n\n\n\n\nThe most common length is 3, appearing 7 times. The longest detected sequence contains 29 occurrences in season 4, episode 22, listed as “Crime Punishment” in the source filename. The original blocks were checked: the repetition continues across several blocks, which is why the analysis joins them before matching.\nThat long sequence follows from the stated counting rule. It is not a verified count of one character’s delivery or proof that every repetition was transcribed accurately. For example, a quoted repetition by another character still counts, and adjacent uses by different speakers cannot be separated reliably with these data."
+  },
+  {
+    "objectID": "brooklyn-nine-nine.html#which-episodes-have-the-most-cool-occurrences",
+    "href": "brooklyn-nine-nine.html#which-episodes-have-the-most-cool-occurrences",
+    "title": "Cool, Cool, Cool: Brooklyn Nine-Nine",
+    "section": "Which episodes have the most cool occurrences?",
+    "text": "Which episodes have the most cool occurrences?\nThis graph ranks files by total word occurrences, including occurrences inside repeated sequences. It shows which available episode transcripts contribute most to the total; longer transcripts have more opportunities to contain the word. Episode titles are taken from the dataset filenames.\n\n\nShow R code\nggplot(\n  top_episodes,\n  aes(x = cool_mentions, y = fct_reorder(episode_label, cool_mentions))\n) +\n  geom_col(fill = \"#245680\", width = 0.7) +\n  labs(\n    title = \"The ten episode files with the most cool occurrences\",\n    x = \"Occurrences of the whole word cool\",\n    y = \"Episode file (season and episode)\",\n    caption = \"Source: Atharva Naik / SubsLikeScript; total counts, not rates.\"\n  ) +\n  theme_minimal(base_size = 12)\n\n\n\n\n\n\n\n\n\nSeason 4, episode 22 leads with 31 occurrences, largely because of its long repeated sequence. This shows how a single passage can drive an episode’s count. The next two files, “The Crime Scene” and “Casecation,” each contain 16 occurrences."
+  },
+  {
+    "objectID": "brooklyn-nine-nine.html#what-this-tells-us",
+    "href": "brooklyn-nine-nine.html#what-this-tells-us",
+    "title": "Cool, Cool, Cool: Brooklyn Nine-Nine",
+    "section": "What this tells us",
+    "text": "What this tells us\nThe available transcripts show both ordinary uses of “cool” and longer repeated sequences. Repetition accounts for about a quarter of all occurrences, so it contributes meaningfully to the word’s overall frequency. Comparing normalized rates adds context to the raw totals, while the episode ranking shows how individual passages can influence them.\nThese results describe this incomplete transcript collection. They do not establish who says the word most, the emotional meaning of each use, or the total number of times “cool” is spoken in the complete show. The source was already scraped and cleaned before this analysis, so omissions, combined blocks, and transcription errors remain possible."
   },
   {
     "objectID": "income-inequality.html",
@@ -77,11 +98,46 @@
     "text": "Sources\n\nTidyTuesday. (2025, August 5). Income Inequality Before and After Taxes (data and variable descriptions).\nHasell, J. (2023, July 3). Income inequality before and after taxes: how much do countries redistribute income? Our World in Data (original data processing and explanation).\nLuxembourg Income Study. (2025). LIS Database (underlying household-income data, as credited by TidyTuesday and Our World in Data)."
   },
   {
+    "objectID": "big-tech-stock-prices.html",
+    "href": "big-tech-stock-prices.html",
+    "title": "Big Tech Stock Prices in 2022",
+    "section": "",
+    "text": "How did Apple and Microsoft’s adjusted closing stock prices change during 2022?\nThis dataset was shared by TidyTuesday on February 7, 2023. It contains daily stock prices for 14 technology companies. Each row is one company’s stock on one trading day. For this graph, I use stock_symbol to choose Apple (AAPL) and Microsoft (MSFT), date for the horizontal axis, and adj_close for the vertical axis. Adjusted close accounts for stock splits and dividends.\n\nlibrary(tidyverse)\nlibrary(lubridate)\n\nbig_tech_stock_prices &lt;- read_csv(\n  \"https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-02-07/big_tech_stock_prices.csv\"\n)"
+  },
+  {
+    "objectID": "big-tech-stock-prices.html#question",
+    "href": "big-tech-stock-prices.html#question",
+    "title": "Big Tech Stock Prices in 2022",
+    "section": "",
+    "text": "How did Apple and Microsoft’s adjusted closing stock prices change during 2022?\nThis dataset was shared by TidyTuesday on February 7, 2023. It contains daily stock prices for 14 technology companies. Each row is one company’s stock on one trading day. For this graph, I use stock_symbol to choose Apple (AAPL) and Microsoft (MSFT), date for the horizontal axis, and adj_close for the vertical axis. Adjusted close accounts for stock splits and dividends.\n\nlibrary(tidyverse)\nlibrary(lubridate)\n\nbig_tech_stock_prices &lt;- read_csv(\n  \"https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-02-07/big_tech_stock_prices.csv\"\n)"
+  },
+  {
+    "objectID": "big-tech-stock-prices.html#choose-the-observations",
+    "href": "big-tech-stock-prices.html#choose-the-observations",
+    "title": "Big Tech Stock Prices in 2022",
+    "section": "Choose the observations",
+    "text": "Choose the observations\nI keep Apple and Microsoft trading days in 2022. There are 250 rows for each company in this period, and none of these rows is missing a date or adjusted closing price. Non-trading days are not included in the dataset.\n\nstocks_2022 &lt;- big_tech_stock_prices |&gt;\n  filter(\n    stock_symbol == \"AAPL\" | stock_symbol == \"MSFT\",\n    date &gt;= ymd(\"2022-01-01\"),\n    date &lt;= ymd(\"2022-12-31\")\n  )"
+  },
+  {
+    "objectID": "big-tech-stock-prices.html#make-a-graph",
+    "href": "big-tech-stock-prices.html#make-a-graph",
+    "title": "Big Tech Stock Prices in 2022",
+    "section": "Make a graph",
+    "text": "Make a graph\nEach line shows one company’s adjusted closing price per share on the trading days in the dataset.\n\nggplot(stocks_2022, aes(x = date, y = adj_close, color = stock_symbol)) +\n  geom_line() +\n  labs(\n    title = \"Apple and Microsoft stock prices in 2022\",\n    x = \"Date\",\n    y = \"Adjusted closing price (US dollars per share)\",\n    color = \"Company\",\n    caption = \"Source: Yahoo Finance via Evan Gower and TidyTuesday\"\n  )\n\n\n\n\n\n\n\n\nApple and Microsoft’s stock prices often moved in similar directions during 2022, but this graph alone doesn’t show why. Both lines also end lower than they begin. These are prices per share, not the total values of the companies."
+  },
+  {
+    "objectID": "big-tech-stock-prices.html#sources",
+    "href": "big-tech-stock-prices.html#sources",
+    "title": "Big Tech Stock Prices in 2022",
+    "section": "Sources",
+    "text": "Sources\n\nTidyTuesday. (2023, February 7). Big Tech Stock Prices (dataset and variable descriptions).\nGower, E. Big Tech Stock Prices. Kaggle (the dataset TidyTuesday used).\nYahoo Finance. Historical market data (original stock-price source, as credited by TidyTuesday)."
+  },
+  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "Aditya Arya | Data Science",
     "section": "",
-    "text": "Foundations of Data Science in R · Mini-Project 1\n\n\n\nI’m Aditya Arya, a junior at Claremont McKenna College studying economics and data science. Outside class, I enjoy playing poker and FIFA and watching basketball. This site shares my data visualizations for Foundations of Data Science in R.\nExplore Data Viz View the GitHub repository"
+    "text": "Foundations of Data Science in R · Mini-Project 1\n\n\n\nI’m Aditya Arya, a junior at Claremont McKenna College studying economics and data science. Outside class, I enjoy playing poker and FIFA and watching basketball. This site shares my data visualizations and text analysis for Foundations of Data Science in R.\nExplore Data Viz View the GitHub repository"
   },
   {
     "objectID": "index.html#data-viz",
@@ -91,10 +147,73 @@
     "text": "Data Viz\n\nIncome inequality before and after taxes\nHow do pre-tax and post-tax income inequality compare across countries in 2020? This analysis uses data shared through TidyTuesday and a scatterplot made in R.\nRead the analysis →\n\n\nBig Tech stock prices in 2022\nHow did Apple and Microsoft’s adjusted closing stock prices change during 2022? This analysis compares their daily prices with a line graph.\nRead the analysis →"
   },
   {
+    "objectID": "index.html#text-analysis",
+    "href": "index.html#text-analysis",
+    "title": "Aditya Arya | Data Science",
+    "section": "Text Analysis",
+    "text": "Text Analysis\n\nCool, Cool, Cool: Brooklyn Nine-Nine\nHow often does “cool” appear in the available transcripts, and how often is it repeated three or more times in a row?\nRead the analysis →"
+  },
+  {
     "objectID": "index.html#about-this-project",
     "href": "index.html#about-this-project",
     "title": "Aditya Arya | Data Science",
     "section": "About this project",
     "text": "About this project\nThis site is made with Quarto and R for Foundations of Data Science. The source files, including the .qmd pages and rendered website, are in the GitHub repository."
+  },
+  {
+    "objectID": "brooklyn-nine-nine.html#what-i-wanted-to-find-out",
+    "href": "brooklyn-nine-nine.html#what-i-wanted-to-find-out",
+    "title": "Cool, Cool, Cool: Brooklyn Nine-Nine",
+    "section": "",
+    "text": "For this project, I wanted to find out how often “cool” appears in Brooklyn Nine-Nine, especially when it turns into “cool, cool, cool.” I also wanted to see how this changes across seasons.\nI count each “cool” and each repeated sequence separately. So “cool, cool, cool, cool” counts as four mentions of the word and one sequence. I use the available transcripts, which do not tell me who is speaking."
+  },
+  {
+    "objectID": "brooklyn-nine-nine.html#getting-the-data-ready",
+    "href": "brooklyn-nine-nine.html#getting-the-data-ready",
+    "title": "Cool, Cool, Cool: Brooklyn Nine-Nine",
+    "section": "Getting the data ready",
+    "text": "Getting the data ready\nThe data come from Atharva Naik’s Brooklyn Nine-Nine dataset. He collected the transcripts from SubsLikeScript. The original files are saved in data/brooklyn99 in this website’s GitHub repository. Each file contains pieces of an episode’s transcript.\nThe dataset has 134 files from seasons 1–7, but some episodes are missing and there is no season 8. I leave out season-4/episode-11-DUPE.json because it is unclear which episode it represents. It is also much longer than the other season 4 files. I keep the original file in the data folder, but leaving it out of the analysis gives me 133 transcript files to work with.\nFirst, I load the files and get the season and episode numbers from their names. Then I remove the subtitle credits I identified, make the text lowercase, and clean up extra spaces. I join the pieces of each transcript so a line break does not cut off a repeated “cool.” I keep repeated dialogue because that is what I am trying to count.\n\n\nShow R code\nlibrary(tidyverse)\n\nfiles &lt;- list.files(\n  \"data/brooklyn99\", pattern = \"\\\\.json$\",\n  recursive = TRUE, full.names = TRUE\n)\n\ntranscripts &lt;- tibble(source_file = files) |&gt;\n  mutate(\n    text = map_chr(source_file, function(file) {\n      lines &lt;- jsonlite::fromJSON(file)\n      lines &lt;- lines[!str_detect(\n        lines, regex(\"synced.*(chamallow|moustafa|maxpayne)\", ignore_case = TRUE)\n      )]\n      str_c(lines, collapse = \" \")\n    }),\n    season = as.integer(str_extract(source_file, \"(?&lt;=season-)\\\\d+\")),\n    episode = as.integer(str_extract(source_file, \"(?&lt;=episode-)\\\\d+\")),\n    title = str_remove(basename(source_file), \"^episode-\\\\d+-\"),\n    title = str_remove(title, \"\\\\.json$\"),\n    title = str_replace_all(title, \"_\", \" \")\n  )\n\nepisodes &lt;- transcripts |&gt;\n  filter(!str_detect(source_file, \"DUPE\")) |&gt;\n  mutate(\n    text = str_replace_all(text, fixed(\"Ripped By mstoll\"), \"\"),\n    text = str_replace_all(text, fixed(\"&amp;\"), \"&\"),\n    text = str_replace_all(text, \"&gt;\", \"\"),\n    text = str_squish(str_to_lower(text))\n  )"
+  },
+  {
+    "objectID": "brooklyn-nine-nine.html#what-counts-as-cool",
+    "href": "brooklyn-nine-nine.html#what-counts-as-cool",
+    "title": "Cool, Cool, Cool: Brooklyn Nine-Nine",
+    "section": "What counts as “cool”?",
+    "text": "What counts as “cool”?\n\n“Cool” and “cool” both count. “Cooler,” “coolest,” and “cooling” do not.\nA repeated sequence needs three or more “cool”s in a row. Spaces, commas, periods, hyphens, and line breaks can come between them.\nSix “cool”s in a row count as one sequence, not two sequences of three.\nI count “cool” even in “not cool” or when someone quotes another person. I am counting the words, not deciding what they mean in each scene.\n\nThe lookbehind and lookahead in cool_pattern check that “cool” is not part of a longer word. In run_pattern, {2,} looks for at least two more “cool”s after the first one. I also count the words in each transcript so I can compare seasons. For this count, a word is a group of letters or numbers, and apostrophes inside a word are allowed.\n\n\nShow R code\ncool_pattern &lt;- \"(?&lt;!\\\\w)cool(?!\\\\w)\"\nrun_pattern &lt;- \"(?&lt;!\\\\w)cool(?!\\\\w)(?:[\\\\s\\\\p{P}]+cool(?!\\\\w)){2,}\"\nword_pattern &lt;- \"\\\\b\\\\w+(?:['’]\\\\w+)*\\\\b\"\n\nepisodes &lt;- episodes |&gt;\n  mutate(\n    words = str_count(text, word_pattern),\n    cool_mentions = str_count(text, cool_pattern),\n    runs = str_extract_all(text, run_pattern),\n    repeated_sequences = lengths(runs)\n  )\n\nruns &lt;- episodes |&gt;\n  select(season, episode, title, runs) |&gt;\n  unnest_longer(runs, values_to = \"sequence\") |&gt;\n  mutate(run_length = str_count(sequence, cool_pattern))\n\n\nIn these files, “cool” appears 529 times, with 22 sequences of three or more. Those sequences account for 139 mentions, or 26.3% of the total. The other mentions include both single uses and pairs."
+  },
+  {
+    "objectID": "brooklyn-nine-nine.html#does-it-change-by-season",
+    "href": "brooklyn-nine-nine.html#does-it-change-by-season",
+    "title": "Cool, Cool, Cool: Brooklyn Nine-Nine",
+    "section": "Does it change by season?",
+    "text": "Does it change by season?\nSome seasons have more transcripts than others, so comparing only the totals would give them more chances to come out on top. Instead, I compare counts per 1,000 transcript words. I calculate this by dividing each season’s total count by its total words and multiplying by 1,000. I use the season totals rather than averaging the rates for separate episodes.\n\n\nShow R code\nseason_summary &lt;- episodes |&gt;\n  group_by(season) |&gt;\n  summarise(\n    transcript_files = n(),\n    words = sum(words),\n    cool_mentions = sum(cool_mentions),\n    repeated_sequences = sum(repeated_sequences),\n    .groups = \"drop\"\n  ) |&gt;\n  mutate(\n    cool_per_1000 = 1000 * cool_mentions / words,\n    runs_per_1000 = 1000 * repeated_sequences / words\n  )\n\nseason_plot_data &lt;- season_summary |&gt;\n  select(season, cool_per_1000, runs_per_1000) |&gt;\n  pivot_longer(\n    cols = c(cool_per_1000, runs_per_1000),\n    names_to = \"measure\", values_to = \"rate\"\n  ) |&gt;\n  mutate(measure = recode(\n    measure,\n    cool_per_1000 = \"All occurrences of cool\",\n    runs_per_1000 = \"Sequences of 3+ cools\"\n  ))\n\n\nggplot(season_plot_data, aes(x = season, y = rate)) +\n  geom_line(color = \"#245680\", linewidth = 0.7) +\n  geom_point(color = \"#245680\", size = 2.5) +\n  facet_wrap(~ measure, ncol = 1, scales = \"free_y\") +\n  scale_x_continuous(breaks = 1:7) +\n  scale_y_continuous(limits = c(0, NA)) +\n  labs(\n    title = \"How often does cool appear across seasons?\",\n    subtitle = \"Counts per 1,000 words in the available transcripts\",\n    x = \"Season\",\n    y = \"Occurrences or sequences per 1,000 words\",\n    caption = \"Source: Atharva Naik / SubsLikeScript; 133 retained files. Panels use different y-axis scales.\"\n  ) +\n  theme_minimal(base_size = 12)\n\n\n\n\n\n\n\n\n\nSeason 6 has the highest rate, with about 1.47 “cool”s per 1,000 words. Season 1 has 54 mentions, but none are in a sequence of three or more. In this dataset, those sequences start appearing in season 2.\nThe graph goes up and down, so “cool” does not simply become more common every season. Also, season 6 only has 11 files here. The missing episodes could change how the seasons compare, so I would not treat this as the final result for the whole show."
+  },
+  {
+    "objectID": "brooklyn-nine-nine.html#how-many-cools-are-said-in-a-row",
+    "href": "brooklyn-nine-nine.html#how-many-cools-are-said-in-a-row",
+    "title": "Cool, Cool, Cool: Brooklyn Nine-Nine",
+    "section": "How many “cool”s are said in a row?",
+    "text": "How many “cool”s are said in a row?\n\n\nShow R code\nrun_summary &lt;- runs |&gt;\n  count(run_length, name = \"sequences\")\n\ntop_episodes &lt;- episodes |&gt;\n  arrange(season, episode) |&gt;\n  slice_max(cool_mentions, n = 10, with_ties = FALSE) |&gt;\n  mutate(episode_label = str_c(\"S\", season, \" E\", episode, \": \", title))\n\nggplot(run_summary, aes(x = factor(run_length), y = sequences)) +\n  geom_col(fill = \"#245680\", width = 0.7) +\n  scale_y_continuous(breaks = seq(0, max(run_summary$sequences), by = 1)) +\n  labs(\n    title = \"Some cool sequences continue well beyond three repetitions\",\n    subtitle = \"Each continuous sequence of 3+ is counted once\",\n    x = \"Number of cool occurrences in a sequence\",\n    y = \"Number of sequences\",\n    caption = \"Source: Atharva Naik / SubsLikeScript; only observed sequence lengths are shown.\"\n  ) +\n  theme_minimal(base_size = 12)\n\n\n\n\n\n\n\n\n\nThe most common sequence has 3 “cool”s in a row. There are 7 of these. The longest has 29 and comes from season 4, episode 22, labeled “Crime Punishment” in the filename. In the original file, that repetition runs across several transcript blocks. Joining them keeps it as one sequence.\nThat does not necessarily mean one character says all of those “cool”s. The transcripts do not label speakers, so the count can join consecutive uses by different people. It also includes someone quoting the phrase. The result depends on the counting rule and on how accurately the dialogue was transcribed."
+  },
+  {
+    "objectID": "brooklyn-nine-nine.html#which-episodes-use-cool-the-most",
+    "href": "brooklyn-nine-nine.html#which-episodes-use-cool-the-most",
+    "title": "Cool, Cool, Cool: Brooklyn Nine-Nine",
+    "section": "Which episodes use “cool” the most?",
+    "text": "Which episodes use “cool” the most?\nFor this graph, I rank the episode files by their total “cool” counts. This includes mentions inside repeated sequences. Unlike the season graph, these are raw totals, so longer transcripts have more chances to include the word. The episode names come from the filenames.\n\n\nShow R code\nggplot(\n  top_episodes,\n  aes(x = cool_mentions, y = fct_reorder(episode_label, cool_mentions))\n) +\n  geom_col(fill = \"#245680\", width = 0.7) +\n  labs(\n    title = \"The ten episode files with the most cool occurrences\",\n    x = \"Occurrences of the whole word cool\",\n    y = \"Episode file (season and episode)\",\n    caption = \"Source: Atharva Naik / SubsLikeScript; total counts, not rates.\"\n  ) +\n  theme_minimal(base_size = 12)\n\n\n\n\n\n\n\n\n\nSeason 4, episode 22 comes first with 31 mentions. Most come from its long repeated sequence, so one part of the episode explains a lot of its total. “The Crime Scene” and “Casecation” are next, with 16 mentions each."
+  },
+  {
+    "objectID": "brooklyn-nine-nine.html#what-i-found",
+    "href": "brooklyn-nine-nine.html#what-i-found",
+    "title": "Cool, Cool, Cool: Brooklyn Nine-Nine",
+    "section": "What I found",
+    "text": "What I found\nThe repeated “cool, cool, cool” sequences make up about a quarter of all the “cool” mentions in these files. So they explain a noticeable part of the total, even though there are only 22 sequences. The season graph shows how often the word appears relative to the amount of dialogue, while the episode graph shows how one long repetition can push an episode to the top.\nThis is still an incomplete dataset, so I cannot say how many times “cool” is said in the entire show or who says it most. The transcripts were already collected and cleaned before this project, and they may have mistakes or missing dialogue. My results describe the files available here."
+  },
+  {
+    "objectID": "brooklyn-nine-nine.html#sources",
+    "href": "brooklyn-nine-nine.html#sources",
+    "title": "Cool, Cool, Cool: Brooklyn Nine-Nine",
+    "section": "Sources",
+    "text": "Sources\n\nNaik, A. (2021). Brooklyn Nine-Nine dataset. Original JSON transcript files and scraper. Retrieved October 14, 2026.\nSubsLikeScript: Brooklyn Nine-Nine. Transcript source credited by the dataset creator."
   }
 ]

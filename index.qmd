@@ -10,7 +10,7 @@ page-layout: full
 
 # Hi, I'm Aditya
 
-I'm Aditya Arya, a junior at Claremont McKenna College studying economics and data science. Outside class, I enjoy playing poker and FIFA and watching basketball. This site shares my data visualizations for Foundations of Data Science in R.
+I'm Aditya Arya, a junior at Claremont McKenna College studying economics and data science. Outside class, I enjoy playing poker and FIFA and watching basketball. This site shares my data visualizations and text analysis for Foundations of Data Science in R.
 
 [Explore Data Viz](#data-viz){.btn .btn-primary} [View the GitHub repository](https://github.com/aarya28-tech/aarya28-tech.github.io){.btn .btn-outline-primary}
 :::
@@ -37,6 +37,14 @@ How did Apple and Microsoft's adjusted closing stock prices change during 2022? 
 
 [Read the analysis →](big-tech-stock-prices.qmd)
 :::
+
+## Text Analysis
+
+### Cool, Cool, Cool: Brooklyn Nine-Nine
+
+How often does “cool” appear in the available transcripts, and how often is it repeated three or more times in a row?
+
+[Read the analysis →](brooklyn-nine-nine.qmd)
 
 ## About this project
 

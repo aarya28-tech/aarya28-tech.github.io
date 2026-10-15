@@ -17,6 +17,8 @@ website:
             text: Income inequality
           - href: big-tech-stock-prices.qmd
             text: Big Tech stocks
+      - href: brooklyn-nine-nine.qmd
+        text: Text Analysis
 
 format:
   html:
