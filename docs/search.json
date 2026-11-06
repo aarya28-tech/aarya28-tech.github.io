@@ -215,5 +215,82 @@
     "title": "Cool, Cool, Cool: Brooklyn Nine-Nine",
     "section": "Sources",
     "text": "Sources\n\nNaik, A. (2021). Brooklyn Nine-Nine dataset. Original JSON transcript files and scraper. Retrieved October 14, 2026.\nSubsLikeScript: Brooklyn Nine-Nine. Transcript source credited by the dataset creator."
+  },
+  {
+    "objectID": "penguin-simulation.html",
+    "href": "penguin-simulation.html",
+    "title": "Adelie Penguin Flipper Lengths on Two Islands",
+    "section": "",
+    "text": "Do Adelie penguins on Biscoe and Dream islands have different average flipper lengths?\nFor this project, I compare flipper lengths on the two islands using the Palmer penguins dataset. I use only Adelie penguins so that differences between species do not affect the comparison. I first graph the measurements and calculate the difference in the two averages. Then I shuffle the measurements 10,000 times to see how often a difference at least this large comes up by chance under the null hypothesis.\nThe data come from the palmerpenguins package. Dr. Kristen Gorman and the Palmer Station Long Term Ecological Research program collected the original measurements in Antarctica during 2007–2009. Each row is one penguin. I use species to choose Adelie penguins, island to choose Biscoe and Dream, and flipper_length_mm for flipper length in millimeters.\n\nlibrary(tidyverse)\n\npenguins &lt;- read_csv(\"data/penguins.csv\")"
+  },
+  {
+    "objectID": "penguin-simulation.html#conclusion",
+    "href": "penguin-simulation.html#conclusion",
+    "title": "Adelie Penguin Flipper Lengths on Two Islands",
+    "section": "Conclusion",
+    "text": "Conclusion\nI compared the flipper lengths of 100 Adelie penguins from Biscoe and Dream islands and found that the Dream average was 0.94 mm higher. I shuffled the measurements 10,000 times and got an estimated p-value of 0.49, so I did not reject the null hypothesis at the 5% level. This result does not provide strong evidence that the population means differ, but it does not prove that they are equal. Any broader conclusion is limited to Adelie penguins represented by these sampled colonies during 2007–2009, rather than all penguins."
+  },
+  {
+    "objectID": "penguin-simulation.html#question",
+    "href": "penguin-simulation.html#question",
+    "title": "Adelie Penguin Flipper Lengths on Two Islands",
+    "section": "",
+    "text": "Do Adelie penguins on Biscoe and Dream islands have different average flipper lengths?\nFor this project, I compare flipper lengths on the two islands using the Palmer penguins dataset. I use only Adelie penguins so that differences between species do not affect the comparison. I first graph the measurements and calculate the difference in the two averages. Then I shuffle the measurements 10,000 times to see how often a difference at least this large comes up by chance under the null hypothesis.\nThe data come from the palmerpenguins package. Dr. Kristen Gorman and the Palmer Station Long Term Ecological Research program collected the original measurements in Antarctica during 2007–2009. Each row is one penguin. I use species to choose Adelie penguins, island to choose Biscoe and Dream, and flipper_length_mm for flipper length in millimeters.\n\nlibrary(tidyverse)\n\npenguins &lt;- read_csv(\"data/penguins.csv\")"
+  },
+  {
+    "objectID": "penguin-simulation.html#choose-the-observations",
+    "href": "penguin-simulation.html#choose-the-observations",
+    "title": "Adelie Penguin Flipper Lengths on Two Islands",
+    "section": "Choose the observations",
+    "text": "Choose the observations\nI keep Adelie penguins from Biscoe and Dream islands with a recorded flipper length. The dataset contains 44 Adelie penguins from Biscoe and 56 from Dream. None of these 100 penguins is missing a flipper length, so the missing-value filter does not remove any of them. I use the package’s penguins.csv file, saved in this website’s data folder so the analysis can run from the repository.\n\nadelie &lt;- penguins |&gt;\n  filter(\n    species == \"Adelie\",\n    island == \"Biscoe\" | island == \"Dream\",\n    !is.na(flipper_length_mm)\n  )"
+  },
+  {
+    "objectID": "penguin-simulation.html#make-a-graph",
+    "href": "penguin-simulation.html#make-a-graph",
+    "title": "Adelie Penguin Flipper Lengths on Two Islands",
+    "section": "Make a graph",
+    "text": "Make a graph\nEach box shows the middle half of the flipper lengths on one island. The line inside the box marks the median.\n\nggplot(adelie, aes(x = island, y = flipper_length_mm)) +\n  geom_boxplot() +\n  labs(\n    title = \"Adelie penguin flipper lengths on two islands\",\n    x = \"Island\",\n    y = \"Flipper length (mm)\",\n    caption = \"Source: Palmer Station LTER via palmerpenguins, 2007–2009\"\n  )\n\n\n\n\n\n\n\n\nThe flipper lengths overlap substantially across the two islands. The medians are also close together. This graph shows the spread of the measurements, but I use the difference in means for the test below."
+  },
+  {
+    "objectID": "penguin-simulation.html#calculate-the-difference",
+    "href": "penguin-simulation.html#calculate-the-difference",
+    "title": "Adelie Penguin Flipper Lengths on Two Islands",
+    "section": "Calculate the difference",
+    "text": "Calculate the difference\nMy test statistic is the mean flipper length on Dream minus the mean on Biscoe. A positive number means the Dream average is higher. I use arrange(island) to put Biscoe first and Dream second, so diff() subtracts the Biscoe mean from the Dream mean.\n\nisland_means &lt;- adelie |&gt;\n  group_by(island) |&gt;\n  summarise(mean_flipper = mean(flipper_length_mm)) |&gt;\n  arrange(island)\n\nobserved_difference &lt;- diff(island_means$mean_flipper)\n\nThe average flipper length is 188.8 mm on Biscoe and 189.73 mm on Dream. The observed difference is 0.94 mm."
+  },
+  {
+    "objectID": "penguin-simulation.html#run-the-simulation",
+    "href": "penguin-simulation.html#run-the-simulation",
+    "title": "Adelie Penguin Flipper Lengths on Two Islands",
+    "section": "Run the simulation",
+    "text": "Run the simulation\nThe null hypothesis is that flipper length and island are unrelated among the Adelie penguins being compared. Under this model, the population means are equal. The alternative hypothesis is that the population means differ. I test for a difference in either direction and use a 5% significance level.\nUnder the null hypothesis, I can shuffle the flipper lengths between the island groups to see what differences random reassignment produces. I keep the island labels fixed and use sample() without replacement to shuffle the measurements. This keeps the same 100 measurements and the same number of penguins in each island group.\nThe function below does one shuffle and calculates a new difference in means. It returns one number, again using Dream minus Biscoe.\n\nshuffle_difference &lt;- function(rep, data) {\n  shuffled_means &lt;- data |&gt;\n    mutate(shuffled_flipper = sample(flipper_length_mm,\n                                     replace = FALSE)) |&gt;\n    group_by(island) |&gt;\n    summarise(mean_flipper = mean(shuffled_flipper)) |&gt;\n    arrange(island)\n\n  diff(shuffled_means$mean_flipper)\n}\n\nset.seed(123)\n\nnull_differences &lt;- map_dbl(\n  1:10000,\n  shuffle_difference,\n  data = adelie\n)\n\nsimulation &lt;- data.frame(difference = null_differences)\n\nmap_dbl() repeats the function 10,000 times and saves the results as a vector of numbers. One shuffle gives only one possible difference, so repeating it shows the range of differences that random reassignment can produce. The rep argument receives the repetition number, following the pattern in the class examples; the shuffle itself does not use that number. I use set.seed(123) so that running the code again gives the same simulated results."
+  },
+  {
+    "objectID": "penguin-simulation.html#graph-the-simulated-differences",
+    "href": "penguin-simulation.html#graph-the-simulated-differences",
+    "title": "Adelie Penguin Flipper Lengths on Two Islands",
+    "section": "Graph the simulated differences",
+    "text": "Graph the simulated differences\nEach bar shows how many simulated differences fall in that interval. The red lines mark the positive and negative values that are the same distance from zero as the observed difference.\n\nggplot(simulation, aes(x = difference)) +\n  geom_histogram(bins = 30) +\n  geom_vline(\n    xintercept = c(-observed_difference, observed_difference),\n    color = \"red\"\n  ) +\n  labs(\n    title = \"Differences in mean flipper length after shuffling\",\n    subtitle = \"Red lines mark the observed difference in each direction\",\n    x = \"Dream mean minus Biscoe mean (mm)\",\n    y = \"Number of simulations\",\n    caption = \"10,000 shuffles of the Palmer penguin measurements\"\n  )\n\n\n\n\n\n\n\n\nThe simulated differences are centered near zero. The red lines sit within the main part of the distribution, and about half the shuffles produce differences at least this far from zero. This suggests that the observed difference is not unusual under the null hypothesis."
+  },
+  {
+    "objectID": "penguin-simulation.html#find-the-p-value",
+    "href": "penguin-simulation.html#find-the-p-value",
+    "title": "Adelie Penguin Flipper Lengths on Two Islands",
+    "section": "Find the p-value",
+    "text": "Find the p-value\nFor a two-sided test, I count differences at least as far from zero as the observed difference, in either direction. abs() gives the distance from zero. Dividing this count by 10,000 gives the estimated p-value.\n\nextreme_count &lt;- sum(\n  abs(null_differences) &gt;= abs(observed_difference)\n)\n\np_value &lt;- extreme_count / length(null_differences)\n\nIn this simulation, 4915 out of 10,000 shuffles produced a difference at least as large in absolute value as the observed difference. The estimated p-value is 0.49. This is the proportion of results at least this extreme under the null model, not the probability that the null hypothesis is true."
+  },
+  {
+    "objectID": "penguin-simulation.html#sources",
+    "href": "penguin-simulation.html#sources",
+    "title": "Adelie Penguin Flipper Lengths on Two Islands",
+    "section": "Sources",
+    "text": "Sources\n\nHorst, A. M., Hill, A. P., & Gorman, K. B. (2020). palmerpenguins: Palmer Archipelago (Antarctica) penguin data (the package’s penguins.csv file used here).\nPalmer Station Antarctica LTER & K. Gorman (2020). Adelie penguin measurements, 2007–2009 (original data).\nGorman, K. B., Williams, T. D., & Fraser, W. R. (2014). Ecological sexual dimorphism and environmental variability within a community of Antarctic penguins. PLOS ONE, 9(3), e90081 (original study).\nHardin, J. DS002R notes: Permutation tests (examples of shuffling measurements and repeating a simulation)."
+  },
+  {
+    "objectID": "penguin-simulation.html#assumptions-and-limits",
+    "href": "penguin-simulation.html#assumptions-and-limits",
+    "title": "Adelie Penguin Flipper Lengths on Two Islands",
+    "section": "Assumptions and limits",
+    "text": "Assumptions and limits\nThe test assumes that the measurements can be treated as independent and shuffled between groups under the null hypothesis. This simple comparison does not account for sex, year, or possible dependence between birds in the sample. The data are observational, so the comparison also cannot show that living on an island causes a change in flipper length."
   }
 ]

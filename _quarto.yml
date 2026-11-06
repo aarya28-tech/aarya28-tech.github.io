@@ -19,6 +19,8 @@ website:
             text: Big Tech stocks
       - href: brooklyn-nine-nine.qmd
         text: Text Analysis
+      - href: penguin-simulation.qmd
+        text: Simulation
 
 format:
   html:
